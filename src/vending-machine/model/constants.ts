@@ -1,6 +1,6 @@
-import type { Product } from "./type";
+export const CASH_UNITS = [10000, 5000, 1000, 500, 100] as const;
 
-export const PRODUCTS: Product[] = [
+export const PRODUCTS = [
   {
     id: "cola",
     name: "콜라",
@@ -19,4 +19,4 @@ export const PRODUCTS: Product[] = [
     price: 700,
     stock: 10,
   },
-];
+] as const;

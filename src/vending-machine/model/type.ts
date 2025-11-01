@@ -1,3 +1,5 @@
+import { CASH_UNITS } from "./constants";
+
 export type Product = {
   id: string;
   name: string;
@@ -5,7 +7,8 @@ export type Product = {
   stock: number;
 };
 
-export type CashAmount = 100 | 500 | 1000 | 5000 | 10000;
+export type CashAmount = (typeof CASH_UNITS)[number];
+
 
 export type CashPayment = {
   type: "cash";

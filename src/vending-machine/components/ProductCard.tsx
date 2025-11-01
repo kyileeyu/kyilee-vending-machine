@@ -2,37 +2,33 @@ import styled from "@emotion/styled";
 import { formatCurrency } from "../utils/helpers";
 import { AnimatedCard, PriceText } from "../styles/common";
 import { theme } from "../styles/theme";
-import { useVendingMachineContext } from "../context/VendingMachineContext";
-import { useProductSelection } from "../hooks/useProductSelection";
 import { Product } from "../model/type";
 
 interface ProductCardProps {
   product: Product;
+  isSelected: boolean;
+  canPurchase: boolean;
+  isOutOfStock: boolean;
+  onSelect: () => void;
 }
 
-export const ProductCard = ({ product }: ProductCardProps) => {
-  const { selectedProduct, balance, selectProduct } =
-    useVendingMachineContext();
-  const { canPurchase, isOutOfStock } = useProductSelection({
-    products: [product],
-    balance,
-    selectedProduct,
-  });
-
-  const isSelected = selectedProduct === product.id;
-  const canPurchaseProduct = canPurchase(product);
-  const isOut = isOutOfStock(product);
-
+export const ProductCard = ({
+  product,
+  isSelected,
+  canPurchase,
+  isOutOfStock,
+  onSelect,
+}: ProductCardProps) => {
   return (
     <AnimatedCard
-      whileHover={canPurchaseProduct ? { scale: 1.05 } : undefined}
-      whileTap={canPurchaseProduct ? { scale: 0.95 } : undefined}
-      onClick={canPurchaseProduct ? () => selectProduct(product.id) : undefined}
+      whileHover={canPurchase ? { scale: 1.05 } : undefined}
+      whileTap={canPurchase ? { scale: 0.95 } : undefined}
+      onClick={canPurchase ? onSelect : undefined}
       $selected={isSelected}
-      $disabled={!canPurchaseProduct}>
+      $disabled={!canPurchase}>
       <ProductName>{product.name}</ProductName>
       <PriceText>{formatCurrency(product.price)}원</PriceText>
-      <StockText>{isOut ? `재고: ${product.stock}개` : "품절"}</StockText>
+      <StockText>{isOutOfStock ? "품절" : `재고: ${product.stock}개`}</StockText>
     </AnimatedCard>
   );
 };

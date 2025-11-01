@@ -1,15 +1,31 @@
 import { useVendingMachineContext } from "../context/VendingMachineContext";
-import { Section, Title, Grid } from "../styles/common";
+import { useProductSelection } from "../hooks/useProductSelection";
+import { Section,  Grid } from "../styles/common";
 import { ProductCard } from "./ProductCard";
 
 export const ProductDisplay = () => {
-  const { products } = useVendingMachineContext();
+  const { products, selectedProduct, balance, selectProduct } =
+    useVendingMachineContext();
+
+  const { canPurchase, isOutOfStock } = useProductSelection({
+    products,
+    balance,
+    selectedProduct,
+  });
 
   return (
     <Section $spacing="lg">
-      <Title $size="lg">What would you like to buy?</Title>
       <Grid $columns={3} $gap="md">
-        {products.map((product) => ProductCard({ product }))}
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            isSelected={selectedProduct === product.id}
+            canPurchase={canPurchase(product)}
+            isOutOfStock={isOutOfStock(product)}
+            onSelect={() => selectProduct(product.id)}
+          />
+        ))}
       </Grid>
     </Section>
   );

@@ -1,11 +1,14 @@
 import { useVendingMachineContext } from "../context/VendingMachineContext";
 import { useProductSelection } from "../hooks/useProductSelection";
+import { getProductsWithStock } from "../services/inventory";
 import { Section, Grid, Card } from "../../shared/styles/common";
 import { ProductCard } from "./ProductCard";
 
 export const ProductDisplay = () => {
-  const { products, selectedProduct, balance, selectProduct } =
-    useVendingMachineContext();
+  const { selectedProduct, balance, selectProduct } = useVendingMachineContext();
+
+  // products는 재고 정보와 함께 가져옴 (서비스 레이어에서 관리)
+  const products = getProductsWithStock();
 
   const { canPurchase, isOutOfStock } = useProductSelection({
     products,

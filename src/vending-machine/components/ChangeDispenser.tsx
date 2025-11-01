@@ -1,9 +1,11 @@
 import styled from "@emotion/styled";
 import { motion, AnimatePresence } from "framer-motion";
+import { useMemo } from "react";
 import { useVendingMachineContext } from "../context/VendingMachineContext";
+import { PRODUCTS } from "../model/constants";
+import { calculateChange } from "../services/change";
 import {
   formatChangeData,
-  hasChange,
   getProductName,
   formatCurrency,
 } from "../utils/helpers";
@@ -16,11 +18,13 @@ import {
 import { theme } from "../../shared/styles/theme";
 
 export const ChangeDispenser = () => {
-  const { change, selectedProduct, products, reset } =
-    useVendingMachineContext();
+  const { balance, selectedProduct, reset } = useVendingMachineContext();
 
-  const shouldShow = hasChange(change) || selectedProduct !== null;
-  const selectedProductName = getProductName(products, selectedProduct);
+  // change는 balance로부터 계산되는 파생 상태
+  const change = useMemo(() => calculateChange(balance), [balance]);
+
+  const shouldShow = selectedProduct !== null;
+  const selectedProductName = getProductName(PRODUCTS, selectedProduct);
   const changeData = formatChangeData(change);
 
   return (
@@ -39,7 +43,7 @@ export const ChangeDispenser = () => {
         </AnimatePresence>
 
         <AnimatePresence>
-          {changeData.length > 0 && (
+          {selectedProduct && changeData.length > 0 && (
             <ChangeSection
               initial={{ y: -30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}

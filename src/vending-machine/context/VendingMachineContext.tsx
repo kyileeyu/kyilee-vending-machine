@@ -1,16 +1,14 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-import type { VendingMachineState, Product, CashAmount } from '../model/type';
+import type { VendingMachineState, CashAmount } from '../model/type';
 import { PRODUCTS } from '../model/constants';
 import * as paymentService from '../services/payment';
 import * as productService from '../services/product';
-import { calculateChange } from '../services/change';
+import * as inventoryService from '../services/inventory';
 
 interface VendingMachineContextValue {
   state: VendingMachineState;
   balance: number;
-  products: Product[];
   selectedProduct: string | null;
-  change: Record<number, number> | null;
   error: string | null;
   insertCash: (amount: CashAmount) => void;
   processCardPayment: (amount: number) => void;
@@ -32,9 +30,15 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
   const [state, setState] = useState<VendingMachineState>('대기중');
   const [balance, setBalance] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
-  const [change, setChange] = useState<Record<number, number> | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [products, setProducts] = useState<Product[]>(PRODUCTS.map(p => ({ ...p })));
+  // 재고 변경 시그널 (재고가 변경될 때마다 증가)
+  const [, setInventoryVersion] = useState(0);
+
+  // 에러 핸들링 공통 함수
+  const handleError = (err: unknown) => {
+    setState('에러');
+    setError(err instanceof Error ? err.message : '알 수 없는 에러');
+  };
 
   const insertCash = (amount: CashAmount) => {
     try {
@@ -43,8 +47,7 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
       setState('입금완료');
       setError(null);
     } catch (err) {
-      setState('에러');
-      setError(err instanceof Error ? err.message : '알 수 없는 에러');
+      handleError(err);
     }
   };
 
@@ -55,34 +58,36 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
       setState('입금완료');
       setError(null);
     } catch (err) {
-      setState('에러');
-      setError(err instanceof Error ? err.message : '알 수 없는 에러');
+      handleError(err);
     }
   };
 
   const selectProduct = (productId: string) => {
     try {
-      const product = products.find(p => p.id === productId);
+      // PRODUCTS는 constants에서 가져옴 (전역 상태 아님)
+      const product = PRODUCTS.find(p => p.id === productId);
       if (!product) {
         throw new Error('상품을 찾을 수 없습니다');
       }
 
-      const result = productService.selectProduct(balance, product);
+      // 재고를 포함한 최신 상품 정보 가져오기
+      const currentStock = inventoryService.getStock(productId);
+      const productWithStock = { ...product, stock: currentStock };
 
-      setProducts(prev =>
-        prev.map(p => (p.id === productId ? { ...p, stock: p.stock - 1 } : p))
-      );
+      const result = productService.selectProduct(balance, productWithStock);
+
+      // 재고 감소 (서비스 레이어에서 처리)
+      inventoryService.decreaseStock(productId);
+
+      // 재고 변경 시그널 발생 (컴포넌트 리렌더링 트리거)
+      setInventoryVersion(v => v + 1);
 
       setBalance(result.remainingBalance);
       setSelectedProduct(productId);
       setState('선택완료');
-
-      const changeAmount = calculateChange(result.remainingBalance);
-      setChange(changeAmount);
       setError(null);
     } catch (err) {
-      setState('에러');
-      setError(err instanceof Error ? err.message : '알 수 없는 에러');
+      handleError(err);
     }
   };
 
@@ -90,16 +95,13 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
     setState('대기중');
     setBalance(0);
     setSelectedProduct(null);
-    setChange(null);
     setError(null);
   };
 
   const value: VendingMachineContextValue = {
     state,
     balance,
-    products,
     selectedProduct,
-    change,
     error,
     insertCash,
     processCardPayment,

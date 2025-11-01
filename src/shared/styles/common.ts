@@ -34,7 +34,9 @@ export const Title = styled.h2<{ $size?: 'sm' | 'md' | 'lg' }>`
 export const Label = styled.span<{ $size?: 'sm' | 'md' }>`
   color: ${theme.colors.textSecondary};
   font-size: ${(props) =>
-    props.$size === 'sm' ? theme.typography.size.sm : theme.typography.size.base};
+    props.$size === 'sm'
+      ? theme.typography.size.sm
+      : theme.typography.size.base};
   font-weight: ${theme.typography.weight.medium};
 `;
 
@@ -74,7 +76,8 @@ export const Section = styled.div<{ $spacing?: 'sm' | 'md' | 'lg' }>`
 export const Grid = styled.div<{ $columns: number; $gap?: 'sm' | 'md' }>`
   display: grid;
   grid-template-columns: repeat(${(props) => props.$columns}, 1fr);
-  gap: ${(props) => (props.$gap === 'sm' ? theme.spacing.sm : theme.spacing.md)};
+  gap: ${(props) =>
+    props.$gap === 'sm' ? theme.spacing.sm : theme.spacing.md};
 `;
 
 /**
@@ -124,7 +127,9 @@ export const Button = styled(motion.button)<{
       : `2px solid ${theme.colors.borderLight}`};
   border-radius: ${theme.borderRadius.lg};
   color: ${(props) =>
-    props.$variant === 'primary' ? theme.colors.white : theme.colors.textPrimary};
+    props.$variant === 'primary'
+      ? theme.colors.white
+      : theme.colors.textPrimary};
   font-size: ${theme.typography.size.base};
   font-weight: ${theme.typography.weight.semibold};
   cursor: pointer;
@@ -148,8 +153,10 @@ export const Button = styled(motion.button)<{
   }
 
   &:active:not(:disabled) {
-    transform: ${(props) => (props.$variant === 'primary' ? 'translateY(0)' : 'scale(0.97)')};
-    background: ${(props) => (props.$variant === 'secondary' ? theme.colors.primaryPale : '')};
+    transform: ${(props) =>
+      props.$variant === 'primary' ? 'translateY(0)' : 'scale(0.97)'};
+    background: ${(props) =>
+      props.$variant === 'secondary' ? theme.colors.primaryPale : ''};
     border-color: ${(props) =>
       props.$variant === 'secondary' ? theme.colors.borderPinkDark : ''};
   }
@@ -166,7 +173,7 @@ export const Button = styled(motion.button)<{
 export const LCDScreen = styled.div`
   background: ${theme.colors.gradientPink};
   border: 1px solid ${theme.colors.borderPink};
-  border-radius: ${theme.borderRadius['2xl']};
+  border-radius: ${theme.borderRadius["2xl"]};
   padding: ${theme.spacing.xl};
 `;
 
@@ -202,7 +209,7 @@ export const AnimatedCard = styled(motion.div)<{
         ? theme.colors.border
         : theme.colors.borderLight};
   border-radius: ${theme.borderRadius.xl};
-  cursor: ${(props) => (props.$disabled ? 'not-allowed' : 'pointer')};
+  cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
   opacity: ${(props) => (props.$disabled ? 0.5 : 1)};
   transition: ${theme.transitions.default};
   text-align: center;
@@ -222,8 +229,9 @@ export const AnimatedCard = styled(motion.div)<{
  * 디스펜서 컨테이너 (하단 출구)
  */
 export const DispenserContainer = styled.div`
+  height: 230px;
   background: ${theme.colors.navy};
-  border-radius: ${theme.borderRadius['2xl']};
+  border-radius: ${theme.borderRadius["2xl"]};
   padding: ${theme.spacing.xl};
   margin-top: ${theme.spacing.xl};
 `;

@@ -14,7 +14,7 @@ import {
 import { theme } from "../../shared/styles/theme";
 
 export const StatusDisplay = () => {
-  const { state, balance, error, reset } = useVendingMachineContext();
+  const { state, balance, error, reset, isCardPayment } = useVendingMachineContext();
   const { message, isError } = useStatusMessage({ state, error });
 
   return (
@@ -22,7 +22,9 @@ export const StatusDisplay = () => {
       <LCDScreen>
         <BalanceSection>
           <Label>잔액</Label>
-          <PriceText $size="lg">{formatCurrency(balance)}원</PriceText>
+          <PriceText $size="lg">
+            {isCardPayment ? '카드결제' : `${formatCurrency(balance)}원`}
+          </PriceText>
         </BalanceSection>
         <Divider />
         <AnimatePresence mode="wait">

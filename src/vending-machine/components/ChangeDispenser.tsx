@@ -78,6 +78,7 @@ export const ChangeDispenser = () => {
 const ChangeSection = styled(motion.div)`
   border-top: 1px dashed rgba(255, 255, 255, 0.2);
   padding-top: ${theme.spacing.md};
+  height: "400px";
 `;
 
 const ChangeSectionTitle = styled.h4`

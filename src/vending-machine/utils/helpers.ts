@@ -45,10 +45,3 @@ export const getProductName = (
   const product = products.find((p) => p.id === productId);
   return product?.name || null;
 };
-
-/**
- * 결제 비활성화 여부 체크
- */
-export const isPaymentDisabled = (state: string): boolean => {
-  return state === '선택완료';
-};

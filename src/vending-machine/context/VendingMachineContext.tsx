@@ -12,6 +12,7 @@ interface VendingMachineContextValue {
   selectedProduct: string | null;
   error: string | null;
   isProcessingPayment: boolean;
+  isCardPayment: boolean;
   insertCash: (amount: CashAmount) => void;
   processCardPayment: () => Promise<void>;
   selectProduct: (productId: string) => void;
@@ -34,6 +35,7 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [isCardPayment, setIsCardPayment] = useState(false);
   // 재고 변경 시그널 (재고가 변경될 때마다 증가)
   const [, setInventoryVersion] = useState(0);
 
@@ -49,6 +51,7 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
       setBalance(newBalance);
       setState('입금완료');
       setError(null);
+      setIsCardPayment(false);
     } catch (err) {
       handleError(err);
     }
@@ -64,6 +67,7 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
       if (result.success && result.amount) {
         setBalance(result.amount);
         setState('입금완료');
+        setIsCardPayment(true);
       } else {
         handleError(new CardPaymentError(result.error || '알 수 없는 오류'));
       }
@@ -108,6 +112,7 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
     setBalance(0);
     setSelectedProduct(null);
     setError(null);
+    setIsCardPayment(false);
   }, []);
 
   const value: VendingMachineContextValue = {
@@ -116,6 +121,7 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
     selectedProduct,
     error,
     isProcessingPayment,
+    isCardPayment,
     insertCash,
     processCardPayment,
     selectProduct,

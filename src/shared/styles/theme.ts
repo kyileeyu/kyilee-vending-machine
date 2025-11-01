@@ -28,6 +28,11 @@ export const colors = {
   // 상태 색상
   error: '#ef4444',
 
+  // 추가 색상
+  navy: '#1e293b',          // 네이비 (디스펜서 배경)
+  hoverPink: '#ff8a8a',     // 호버 핑크 (버튼 호버)
+  lightGray: '#f1f5f9',     // 라이트 그레이 (버튼 호버)
+
   // 그라디언트
   gradientPink: 'linear-gradient(135deg, #fef3f2 0%, #fff7f5 100%)',
 } as const;

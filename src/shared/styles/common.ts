@@ -137,7 +137,7 @@ export const Button = styled(motion.button)<{
     ${(props) =>
       props.$variant === 'primary'
         ? `
-      background: #ff8a8a;
+      background: ${theme.colors.hoverPink};
       transform: translateY(-1px);
       box-shadow: ${theme.shadows.xl};
     `
@@ -222,7 +222,7 @@ export const AnimatedCard = styled(motion.div)<{
  * 디스펜서 컨테이너 (하단 출구)
  */
 export const DispenserContainer = styled.div`
-  background: #1e293b;
+  background: ${theme.colors.navy};
   border-radius: ${theme.borderRadius['2xl']};
   padding: ${theme.spacing.xl};
   margin-top: ${theme.spacing.xl};
@@ -251,7 +251,7 @@ export const DispenserButton = styled(motion.button)`
   background: ${theme.colors.white};
   border: none;
   border-radius: ${theme.borderRadius.lg};
-  color: #1e293b;
+  color: ${theme.colors.navy};
   font-size: ${theme.typography.size.base};
   font-weight: ${theme.typography.weight.semibold};
   cursor: pointer;
@@ -261,6 +261,6 @@ export const DispenserButton = styled(motion.button)`
   margin-top: ${theme.spacing.sm};
 
   &:hover {
-    background: #f1f5f9;
+    background: ${theme.colors.lightGray};
   }
 `;

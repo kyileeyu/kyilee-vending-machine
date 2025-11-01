@@ -1,16 +1,18 @@
 import styled from '@emotion/styled';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVendingMachineContext } from '../context/VendingMachineContext';
+import { formatChangeData, hasChange, getProductName, formatCurrency } from '../utils/helpers';
 import { Title, OutputArea, OutputItem, Button, Text } from '../styles/common';
 import { theme } from '../styles/theme';
 
 export const ChangeDispenser = () => {
   const { change, selectedProduct, products, reset, state } = useVendingMachineContext();
 
-  const hasOutput = change !== null || selectedProduct !== null;
-  const selectedProductName = products.find(p => p.id === selectedProduct)?.name;
+  const shouldShow = hasChange(change) || selectedProduct !== null;
+  const selectedProductName = getProductName(products, selectedProduct);
+  const changeData = formatChangeData(change);
 
-  if (!hasOutput && state !== '에러') return null;
+  if (!shouldShow && state !== '에러') return null;
 
   return (
     <div>
@@ -30,7 +32,7 @@ export const ChangeDispenser = () => {
         </AnimatePresence>
 
         <AnimatePresence>
-          {change && Object.keys(change).length > 0 && (
+          {changeData.length > 0 && (
             <ChangeSection
               initial={{ y: -30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -38,18 +40,16 @@ export const ChangeDispenser = () => {
               transition={{ delay: 0.2 }}
             >
               <ChangeSectionTitle>거스름돈</ChangeSectionTitle>
-              {Object.entries(change)
-                .filter(([_, count]) => count > 0)
-                .map(([denomination, count]) => (
-                  <Text key={denomination} $size="sm">
-                    {Number(denomination).toLocaleString()}원 × {count}
-                  </Text>
-                ))}
+              {changeData.map(({ denomination, count }) => (
+                <Text key={denomination} $size="sm">
+                  {formatCurrency(denomination)}원 × {count}
+                </Text>
+              ))}
             </ChangeSection>
           )}
         </AnimatePresence>
 
-        {hasOutput && (
+        {shouldShow && (
           <Button
             $variant="primary"
             $fullWidth

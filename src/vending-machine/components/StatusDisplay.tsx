@@ -1,45 +1,32 @@
 import styled from '@emotion/styled';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVendingMachineContext } from '../context/VendingMachineContext';
+import { useStatusMessage } from '../hooks/useStatusMessage';
+import { formatCurrency } from '../utils/helpers';
 import { Section, LCDScreen, Label, PriceText, Divider } from '../styles/common';
 import { theme } from '../styles/theme';
 
 export const StatusDisplay = () => {
   const { state, balance, error } = useVendingMachineContext();
-
-  const getMessage = () => {
-    if (error) return error;
-    switch (state) {
-      case '대기중':
-        return '상품을 선택해주세요';
-      case '입금완료':
-        return '상품을 선택하세요';
-      case '선택완료':
-        return '상품이 나옵니다';
-      case '에러':
-        return error || '오류가 발생했습니다';
-      default:
-        return '';
-    }
-  };
+  const { message, isError } = useStatusMessage({ state, error });
 
   return (
     <Section $spacing="md">
       <LCDScreen>
         <BalanceSection>
           <Label>잔액</Label>
-          <PriceText $size="lg">{balance.toLocaleString()}원</PriceText>
+          <PriceText $size="lg">{formatCurrency(balance)}원</PriceText>
         </BalanceSection>
         <Divider />
         <AnimatePresence mode="wait">
           <Message
-            key={getMessage()}
+            key={message}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            $isError={state === '에러'}
+            $isError={isError}
           >
-            {getMessage()}
+            {message}
           </Message>
         </AnimatePresence>
       </LCDScreen>

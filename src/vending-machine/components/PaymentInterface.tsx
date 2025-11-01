@@ -1,10 +1,11 @@
 import { useVendingMachineContext } from '../context/VendingMachineContext';
 import { CASH_UNITS } from '../model/constants';
+import { isPaymentDisabled, formatCurrency } from '../utils/helpers';
 import { Section, Title, Grid, Button } from '../styles/common';
 
 export const PaymentInterface = () => {
   const { insertCash, state } = useVendingMachineContext();
-  const disabled = state === '선택완료';
+  const disabled = isPaymentDisabled(state);
 
   return (
     <Section $spacing="md">
@@ -19,7 +20,7 @@ export const PaymentInterface = () => {
             onClick={() => !disabled && insertCash(amount)}
             disabled={disabled}
           >
-            {amount.toLocaleString()}원
+            {formatCurrency(amount)}원
           </Button>
         ))}
       </Grid>

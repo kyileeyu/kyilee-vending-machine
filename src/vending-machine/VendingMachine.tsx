@@ -4,8 +4,8 @@ import { ProductDisplay } from "./components/ProductDisplay";
 import { StatusDisplay } from "./components/StatusDisplay";
 import { PaymentInterface } from "./components/PaymentInterface";
 import { ChangeDispenser } from "./components/ChangeDispenser";
-import { theme } from "./styles/theme";
-import { Title } from "./styles/common";
+import { theme } from "../shared/styles/theme";
+import { Title } from "../shared/styles/common";
 
 export const VendingMachine = () => {
   return (

@@ -1,12 +1,23 @@
-import styled from '@emotion/styled';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useVendingMachineContext } from '../context/VendingMachineContext';
-import { formatChangeData, hasChange, getProductName, formatCurrency } from '../utils/helpers';
-import { DispenserContainer, DispenserContent, DispenserItem, DispenserButton } from '../styles/common';
-import { theme } from '../styles/theme';
+import styled from "@emotion/styled";
+import { motion, AnimatePresence } from "framer-motion";
+import { useVendingMachineContext } from "../context/VendingMachineContext";
+import {
+  formatChangeData,
+  hasChange,
+  getProductName,
+  formatCurrency,
+} from "../utils/helpers";
+import {
+  DispenserContainer,
+  DispenserContent,
+  DispenserItem,
+  DispenserButton,
+} from "../../shared/styles/common";
+import { theme } from "../../shared/styles/theme";
 
 export const ChangeDispenser = () => {
-  const { change, selectedProduct, products, reset } = useVendingMachineContext();
+  const { change, selectedProduct, products, reset } =
+    useVendingMachineContext();
 
   const shouldShow = hasChange(change) || selectedProduct !== null;
   const selectedProductName = getProductName(products, selectedProduct);
@@ -21,8 +32,7 @@ export const ChangeDispenser = () => {
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ type: 'spring', damping: 15 }}
-            >
+              transition={{ type: "spring", damping: 15 }}>
               🥤 {selectedProductName}
             </DispenserItem>
           )}
@@ -34,8 +44,7 @@ export const ChangeDispenser = () => {
               initial={{ y: -30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ delay: 0.2 }}
-            >
+              transition={{ delay: 0.2 }}>
               <ChangeSectionTitle>거스름돈</ChangeSectionTitle>
               {changeData.map(({ denomination, count }) => (
                 <ChangeText key={denomination}>
@@ -53,8 +62,7 @@ export const ChangeDispenser = () => {
             onClick={reset}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
+            transition={{ delay: 0.5 }}>
             확인
           </DispenserButton>
         )}

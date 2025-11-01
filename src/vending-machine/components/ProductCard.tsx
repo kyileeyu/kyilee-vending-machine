@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { formatCurrency } from "../utils/helpers";
-import { PriceText, AnimatedCard } from "../styles/common";
-import { theme } from "../styles/theme";
+import { PriceText, AnimatedCard } from "../../shared/styles/common";
+import { theme } from "../../shared/styles/theme";
 import { Product } from "../model/type";
 
 interface ProductCardProps {
@@ -28,7 +28,9 @@ export const ProductCard = ({
       $disabled={!canPurchase}>
       <ProductName>{product.name}</ProductName>
       <PriceText>{formatCurrency(product.price)}원</PriceText>
-      <StockText>{isOutOfStock ? "품절" : `재고: ${product.stock}개`}</StockText>
+      <StockText>
+        {isOutOfStock ? "품절" : `재고: ${product.stock}개`}
+      </StockText>
     </AnimatedCard>
   );
 };

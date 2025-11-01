@@ -1,6 +1,6 @@
 import { useVendingMachineContext } from "../context/VendingMachineContext";
 import { useProductSelection } from "../hooks/useProductSelection";
-import { Section, Grid, Card } from "../styles/common";
+import { Section, Grid, Card } from "../../shared/styles/common";
 import { ProductCard } from "./ProductCard";
 
 export const ProductDisplay = () => {

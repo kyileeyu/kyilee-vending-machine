@@ -1,4 +1,4 @@
-import { VendingMachine } from "./vending-machine/components/VendingMachine";
+import { VendingMachine } from "./vending-machine/VendingMachine";
 
 function App() {
   return <VendingMachine />;

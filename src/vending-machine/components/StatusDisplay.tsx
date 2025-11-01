@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useVendingMachineContext } from '../context/VendingMachineContext';
+import { Section, LCDScreen, Label, PriceText, Divider } from '../styles/common';
+import { theme } from '../styles/theme';
 
 export const StatusDisplay = () => {
   const { state, balance, error } = useVendingMachineContext();
@@ -22,12 +24,13 @@ export const StatusDisplay = () => {
   };
 
   return (
-    <Container>
+    <Section $spacing="md">
       <LCDScreen>
         <BalanceSection>
           <Label>잔액</Label>
-          <Balance>{balance.toLocaleString()}원</Balance>
+          <PriceText $size="lg">{balance.toLocaleString()}원</PriceText>
         </BalanceSection>
+        <Divider />
         <AnimatePresence mode="wait">
           <Message
             key={getMessage()}
@@ -40,49 +43,24 @@ export const StatusDisplay = () => {
           </Message>
         </AnimatePresence>
       </LCDScreen>
-    </Container>
+    </Section>
   );
 };
-
-const Container = styled.div`
-  margin-bottom: 25px;
-`;
-
-const LCDScreen = styled.div`
-  background: linear-gradient(135deg, #fef3f2 0%, #fff7f5 100%);
-  border: 1px solid #ffe0dd;
-  border-radius: 20px;
-  padding: 20px;
-`;
 
 const BalanceSection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #ffd4cd;
-`;
-
-const Label = styled.span`
-  color: #6b7280;
-  font-size: 13px;
-  font-weight: 500;
-`;
-
-const Balance = styled.span`
-  color: #ff9b9b;
-  font-size: 22px;
-  font-weight: 700;
+  margin-bottom: ${theme.spacing.md};
 `;
 
 const Message = styled(motion.p)<{ $isError: boolean }>`
-  color: ${props => (props.$isError ? '#ef4444' : '#1f2937')};
-  font-size: 14px;
+  color: ${props => (props.$isError ? theme.colors.error : theme.colors.textPrimary)};
+  font-size: ${theme.typography.size.md};
   text-align: center;
   margin: 0;
   min-height: 20px;
-  font-weight: 500;
+  font-weight: ${theme.typography.weight.medium};
 
   ${props =>
     props.$isError &&

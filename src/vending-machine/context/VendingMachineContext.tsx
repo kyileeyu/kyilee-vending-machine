@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import type { VendingMachineState, CashAmount } from '../model/type';
 import { PRODUCTS } from '../model/constants';
+import { CardPaymentError } from '../model/error';
 import * as paymentService from '../services/payment';
 import * as productService from '../services/product';
 import * as inventoryService from '../services/inventory';
@@ -10,8 +11,9 @@ interface VendingMachineContextValue {
   balance: number;
   selectedProduct: string | null;
   error: string | null;
+  isProcessingPayment: boolean;
   insertCash: (amount: CashAmount) => void;
-  processCardPayment: (amount: number) => void;
+  processCardPayment: () => Promise<void>;
   selectProduct: (productId: string) => void;
   reset: () => void;
 }
@@ -31,6 +33,7 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
   const [balance, setBalance] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   // 재고 변경 시그널 (재고가 변경될 때마다 증가)
   const [, setInventoryVersion] = useState(0);
 
@@ -40,7 +43,7 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
     setError(err instanceof Error ? err.message : '알 수 없는 에러');
   };
 
-  const insertCash = (amount: CashAmount) => {
+  const insertCash = useCallback((amount: CashAmount) => {
     try {
       const newBalance = paymentService.insertCash(balance, amount);
       setBalance(newBalance);
@@ -49,20 +52,29 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
     } catch (err) {
       handleError(err);
     }
-  };
+  }, [balance]);
 
-  const processCardPayment = (amount: number) => {
+  const processCardPayment = useCallback(async () => {
+    setIsProcessingPayment(true);
+    setError(null);
+
     try {
-      const result = paymentService.processCardPayment(amount);
-      setBalance(result.amount);
-      setState('입금완료');
-      setError(null);
+      const result = await paymentService.requestCardPayment();
+
+      if (result.success && result.amount) {
+        setBalance(result.amount);
+        setState('입금완료');
+      } else {
+        handleError(new CardPaymentError(result.error || '알 수 없는 오류'));
+      }
     } catch (err) {
       handleError(err);
+    } finally {
+      setIsProcessingPayment(false);
     }
-  };
+  }, []);
 
-  const selectProduct = (productId: string) => {
+  const selectProduct = useCallback((productId: string) => {
     try {
       // PRODUCTS는 constants에서 가져옴 (전역 상태 아님)
       const product = PRODUCTS.find(p => p.id === productId);
@@ -89,20 +101,21 @@ export const VendingMachineProvider = ({ children }: { children: ReactNode }) =>
     } catch (err) {
       handleError(err);
     }
-  };
+  }, [balance]);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setState('대기중');
     setBalance(0);
     setSelectedProduct(null);
     setError(null);
-  };
+  }, []);
 
   const value: VendingMachineContextValue = {
     state,
     balance,
     selectedProduct,
     error,
+    isProcessingPayment,
     insertCash,
     processCardPayment,
     selectProduct,

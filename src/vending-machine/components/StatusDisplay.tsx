@@ -9,11 +9,12 @@ import {
   Label,
   PriceText,
   Divider,
+  Button,
 } from "../../shared/styles/common";
 import { theme } from "../../shared/styles/theme";
 
 export const StatusDisplay = () => {
-  const { state, balance, error } = useVendingMachineContext();
+  const { state, balance, error, reset } = useVendingMachineContext();
   const { message, isError } = useStatusMessage({ state, error });
 
   return (
@@ -34,6 +35,21 @@ export const StatusDisplay = () => {
             {message}
           </Message>
         </AnimatePresence>
+        {state === '에러' && (
+          <ResetButtonContainer
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}>
+            <Button
+              $variant="secondary"
+              $fullWidth
+              onClick={reset}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}>
+              다시 시작
+            </Button>
+          </ResetButtonContainer>
+        )}
       </LCDScreen>
     </Section>
   );
@@ -70,4 +86,8 @@ const Message = styled(motion.p)<{ $isError: boolean }>`
       opacity: 0.3;
     }
   }
+`;
+
+const ResetButtonContainer = styled(motion.div)`
+  margin-top: ${theme.spacing.md};
 `;

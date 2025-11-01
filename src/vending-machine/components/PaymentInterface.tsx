@@ -4,8 +4,8 @@ import { isPaymentDisabled, formatCurrency } from "../utils/helpers";
 import { Section, Title, Grid, Button } from "../../shared/styles/common";
 
 export const PaymentInterface = () => {
-  const { insertCash, state } = useVendingMachineContext();
-  const disabled = isPaymentDisabled(state);
+  const { insertCash, processCardPayment, isProcessingPayment, state } = useVendingMachineContext();
+  const disabled = isPaymentDisabled(state) || isProcessingPayment;
 
   return (
     <Section $spacing="md">
@@ -22,6 +22,15 @@ export const PaymentInterface = () => {
             {formatCurrency(amount)}원
           </Button>
         ))}
+
+        <Button
+          $variant="primary"
+          whileHover={!disabled ? { scale: 1.05 } : undefined}
+          whileTap={!disabled ? { y: 2 } : undefined}
+          onClick={() => !disabled && processCardPayment()}
+          disabled={disabled}>
+          {isProcessingPayment ? '처리중...' : '카드 결제'}
+        </Button>
       </Grid>
     </Section>
   );

@@ -28,3 +28,10 @@ export class InvalidAmountError extends VendingMachineError {
     this.name = 'InvalidAmountError';
   }
 }
+
+export class CardPaymentError extends VendingMachineError {
+  constructor(public reason: string) {
+    super(`카드 결제 실패: ${reason}`);
+    this.name = 'CardPaymentError';
+  }
+}

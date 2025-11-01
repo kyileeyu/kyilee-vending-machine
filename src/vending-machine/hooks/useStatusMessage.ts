@@ -6,7 +6,12 @@ interface UseStatusMessageProps {
   error: string | null;
 }
 
-export const useStatusMessage = ({ state, error }: UseStatusMessageProps) => {
+interface UseStatusMessageReturn {
+  message: string;
+  isError: boolean;
+}
+
+export const useStatusMessage = ({ state, error }: UseStatusMessageProps): UseStatusMessageReturn => {
   const message = useMemo(() => {
     // 에러가 있으면 에러 메시지 우선 표시
     if (error) return error;

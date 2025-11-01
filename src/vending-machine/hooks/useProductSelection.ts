@@ -7,11 +7,20 @@ interface UseProductSelectionProps {
   selectedProduct: string | null;
 }
 
+interface UseProductSelectionReturn {
+  canPurchase: (product: Product) => boolean;
+  isOutOfStock: (product: Product) => boolean;
+  isSelected: (productId: string) => boolean;
+  selectedProductData: Product | null;
+  availableProducts: Product[];
+  outOfStockCount: number;
+}
+
 export const useProductSelection = ({
   products,
   balance,
   selectedProduct,
-}: UseProductSelectionProps) => {
+}: UseProductSelectionProps): UseProductSelectionReturn => {
 
   const canPurchase = (product: Product): boolean => {
     return product.stock > 0 && balance >= product.price;

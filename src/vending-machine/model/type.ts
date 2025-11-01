@@ -22,6 +22,12 @@ export type CardPayment = {
 
 export type PaymentMethod = CashPayment | CardPayment;
 
+export type PaymentGatewayResponse = {
+  success: boolean;
+  amount?: number;
+  error?: string;
+};
+
 export type VendingMachineState =
   | "대기중"
   | "입금완료"

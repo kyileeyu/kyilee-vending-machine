@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { formatCurrency } from "../utils/helpers";
-import { AnimatedCard, PriceText } from "../styles/common";
+import { PriceText, AnimatedCard } from "../styles/common";
 import { theme } from "../styles/theme";
 import { Product } from "../model/type";
 

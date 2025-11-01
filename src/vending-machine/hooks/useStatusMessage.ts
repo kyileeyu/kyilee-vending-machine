@@ -1,38 +1,31 @@
-/**
- * 상태 메시지 관련 비즈니스 로직 훅
- */
-
-import { useMemo } from 'react';
-import type { VendingMachineState } from '../model/type';
+import { useMemo } from "react";
+import type { VendingMachineState } from "../model/type";
 
 interface UseStatusMessageProps {
   state: VendingMachineState;
   error: string | null;
 }
 
-/**
- * 상태에 따른 메시지를 반환하는 훅
- */
 export const useStatusMessage = ({ state, error }: UseStatusMessageProps) => {
   const message = useMemo(() => {
     // 에러가 있으면 에러 메시지 우선 표시
     if (error) return error;
 
     switch (state) {
-      case '대기중':
-        return '상품을 선택해주세요';
-      case '입금완료':
-        return '상품을 선택하세요';
-      case '선택완료':
-        return '상품이 나옵니다';
-      case '에러':
-        return error || '오류가 발생했습니다';
+      case "대기중":
+        return "상품을 선택해주세요";
+      case "입금완료":
+        return "상품을 선택하세요";
+      case "선택완료":
+        return "상품이 나옵니다";
+      case "에러":
+        return error || "오류가 발생했습니다";
       default:
-        return '';
+        return "";
     }
   }, [state, error]);
 
-  const isError = state === '에러';
+  const isError = state === "에러";
 
   return {
     message,

@@ -1,6 +1,6 @@
 import { useVendingMachineContext } from "../context/VendingMachineContext";
 import { useProductSelection } from "../hooks/useProductSelection";
-import { Section,  Grid } from "../styles/common";
+import { Section, Grid, Card } from "../styles/common";
 import { ProductCard } from "./ProductCard";
 
 export const ProductDisplay = () => {
@@ -15,18 +15,20 @@ export const ProductDisplay = () => {
 
   return (
     <Section $spacing="lg">
-      <Grid $columns={3} $gap="md">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            isSelected={selectedProduct === product.id}
-            canPurchase={canPurchase(product)}
-            isOutOfStock={isOutOfStock(product)}
-            onSelect={() => selectProduct(product.id)}
-          />
-        ))}
-      </Grid>
+      <Card style={{ minHeight: "300px" }}>
+        <Grid $columns={3} $gap="md">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              isSelected={selectedProduct === product.id}
+              canPurchase={canPurchase(product)}
+              isOutOfStock={isOutOfStock(product)}
+              onSelect={() => selectProduct(product.id)}
+            />
+          ))}
+        </Grid>
+      </Card>
     </Section>
   );
 };

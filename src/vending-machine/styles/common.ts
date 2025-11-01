@@ -31,22 +31,6 @@ export const Title = styled.h2<{ $size?: 'sm' | 'md' | 'lg' }>`
   text-align: left;
 `;
 
-export const Text = styled.p<{ $size?: 'xs' | 'sm' | 'md'; $color?: keyof typeof theme.colors }>`
-  color: ${(props) => theme.colors[props.$color || 'textPrimary']};
-  font-size: ${(props) => {
-    switch (props.$size) {
-      case 'xs':
-        return theme.typography.size.xs;
-      case 'sm':
-        return theme.typography.size.sm;
-      case 'md':
-      default:
-        return theme.typography.size.base;
-    }
-  }};
-  margin: 0;
-`;
-
 export const Label = styled.span<{ $size?: 'sm' | 'md' }>`
   color: ${theme.colors.textSecondary};
   font-size: ${(props) =>
@@ -124,39 +108,6 @@ export const Card = styled.div<{ $variant?: 'default' | 'pink' | 'surface' }>`
   transition: ${theme.transitions.default};
 `;
 
-export const AnimatedCard = styled(motion.div)<{
-  $selected?: boolean;
-  $disabled?: boolean;
-  $variant?: 'default' | 'pink';
-}>`
-  position: relative;
-  padding: ${theme.spacing.lg} ${theme.spacing.md};
-  background: ${(props) =>
-    props.$selected ? theme.colors.primaryPale : theme.colors.surface};
-  border: 2px solid
-    ${(props) =>
-      props.$selected
-        ? theme.colors.primary
-        : props.$disabled
-        ? theme.colors.border
-        : theme.colors.borderLight};
-  border-radius: ${theme.borderRadius.xl};
-  cursor: ${(props) => (props.$disabled ? 'not-allowed' : 'pointer')};
-  opacity: ${(props) => (props.$disabled ? 0.5 : 1)};
-  transition: ${theme.transitions.default};
-  text-align: center;
-
-  &:hover {
-    ${(props) =>
-      !props.$disabled &&
-      `
-      transform: translateY(-2px);
-      box-shadow: ${theme.shadows.lg};
-      border-color: ${theme.colors.primaryLight};
-    `}
-  }
-`;
-
 /**
  * 버튼
  */
@@ -210,21 +161,6 @@ export const Button = styled(motion.button)<{
 `;
 
 /**
- * 배지
- */
-export const Badge = styled.span<{ $variant?: 'error' | 'warning' }>`
-  position: absolute;
-  top: ${theme.spacing.sm};
-  right: ${theme.spacing.sm};
-  background: ${(props) => (props.$variant === 'error' ? theme.colors.error : theme.colors.primary)};
-  color: ${theme.colors.white};
-  padding: 3px ${theme.spacing.sm};
-  border-radius: ${theme.borderRadius.sm};
-  font-size: ${theme.typography.size.xs};
-  font-weight: ${theme.typography.weight.semibold};
-`;
-
-/**
  * LCD 스크린
  */
 export const LCDScreen = styled.div`
@@ -232,31 +168,6 @@ export const LCDScreen = styled.div`
   border: 1px solid ${theme.colors.borderPink};
   border-radius: ${theme.borderRadius['2xl']};
   padding: ${theme.spacing.xl};
-`;
-
-/**
- * 출력 영역
- */
-export const OutputArea = styled.div`
-  background: ${theme.colors.surface};
-  border: 1px solid ${theme.colors.border};
-  border-radius: ${theme.borderRadius.xl};
-  padding: ${theme.spacing.xl};
-  min-height: 100px;
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.spacing.md};
-`;
-
-export const OutputItem = styled(motion.div)`
-  color: ${theme.colors.textPrimary};
-  font-size: ${theme.typography.size.xl};
-  text-align: center;
-  padding: ${theme.spacing.md};
-  background: ${theme.colors.primaryPale};
-  border: 1px solid ${theme.colors.borderPinkDark};
-  border-radius: ${theme.borderRadius.md};
-  font-weight: ${theme.typography.weight.semibold};
 `;
 
 /**
@@ -270,4 +181,86 @@ export const Divider = styled.div<{ $variant?: 'solid' | 'dashed' }>`
   border-top: ${(props) =>
     props.$variant === 'dashed' ? `1px dashed ${theme.colors.border}` : 'none'};
   margin: ${theme.spacing.md} 0;
+`;
+
+/**
+ * 애니메이션 카드
+ */
+export const AnimatedCard = styled(motion.div)<{
+  $selected?: boolean;
+  $disabled?: boolean;
+}>`
+  position: relative;
+  padding: ${theme.spacing.lg} ${theme.spacing.md};
+  background: ${(props) =>
+    props.$selected ? theme.colors.primaryPale : theme.colors.surface};
+  border: 2px solid
+    ${(props) =>
+      props.$selected
+        ? theme.colors.primary
+        : props.$disabled
+        ? theme.colors.border
+        : theme.colors.borderLight};
+  border-radius: ${theme.borderRadius.xl};
+  cursor: ${(props) => (props.$disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${(props) => (props.$disabled ? 0.5 : 1)};
+  transition: ${theme.transitions.default};
+  text-align: center;
+
+  &:hover {
+    ${(props) =>
+      !props.$disabled &&
+      `
+      transform: translateY(-2px);
+      box-shadow: ${theme.shadows.lg};
+      border-color: ${theme.colors.primaryLight};
+    `}
+  }
+`;
+
+/**
+ * 디스펜서 컨테이너 (하단 출구)
+ */
+export const DispenserContainer = styled.div`
+  background: #1e293b;
+  border-radius: ${theme.borderRadius['2xl']};
+  padding: ${theme.spacing.xl};
+  margin-top: ${theme.spacing.xl};
+`;
+
+export const DispenserContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.md};
+  min-height: 120px;
+`;
+
+export const DispenserItem = styled(motion.div)`
+  color: ${theme.colors.white};
+  font-size: ${theme.typography.size.xl};
+  text-align: center;
+  padding: ${theme.spacing.md};
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: ${theme.borderRadius.md};
+  font-weight: ${theme.typography.weight.semibold};
+`;
+
+export const DispenserButton = styled(motion.button)`
+  padding: ${theme.spacing.md};
+  background: ${theme.colors.white};
+  border: none;
+  border-radius: ${theme.borderRadius.lg};
+  color: #1e293b;
+  font-size: ${theme.typography.size.base};
+  font-weight: ${theme.typography.weight.semibold};
+  cursor: pointer;
+  box-shadow: ${theme.shadows.button};
+  transition: ${theme.transitions.default};
+  width: 100%;
+  margin-top: ${theme.spacing.sm};
+
+  &:hover {
+    background: #f1f5f9;
+  }
 `;
